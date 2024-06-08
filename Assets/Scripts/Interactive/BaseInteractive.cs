@@ -4,15 +4,17 @@ using UnityEngine;
 
 namespace Interactive
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class BaseInteractive : MonoBehaviour
     {
         internal Rigidbody rb { get; private set; }
 
-        private void Awake()
+        protected virtual void Awake() => rb = GetComponent<Rigidbody>();
+
+        internal virtual void Grab(Vector3 targetPoint)
         {
-            rb = GetComponent<Rigidbody>();
-            if (!rb)
-                rb = this.gameObject.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.MovePosition(targetPoint);
         }
     }
 }
