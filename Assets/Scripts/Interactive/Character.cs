@@ -24,7 +24,7 @@ namespace Interactive
 
             if (waitingLanding)
                 waitingLanding = false;
-            StartCoroutine(TryStandUp(5));
+            StartCoroutine(TryStandUp(3));
         }
 
         private IEnumerator TryStandUp(float sec)
