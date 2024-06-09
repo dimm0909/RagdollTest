@@ -52,7 +52,7 @@ namespace Player
                 if (!uiTip.activeSelf)
                     uiTip.SetActive(true);
 
-                if (Input.GetKey(KeyCode.E))
+                if (Input.GetMouseButton(0))
                 {
                     Vector3 p = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
                     Ray r = _camera.ScreenPointToRay(p);
@@ -65,12 +65,14 @@ namespace Player
             {
                 uiTip.SetActive(false);
             }
+            if (Input.GetMouseButtonUp(0))
+                ResetInteractiveItem();
+        }
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                GameObject b = Instantiate(npcPrefab);
-                b.transform.position = new Vector3(this.gameObject.transform.position.x, this.transform.position.y + 2, this.gameObject.transform.position.z) ;
-            }
+        public void SpawnNPC()
+        {
+            GameObject b = Instantiate(npcPrefab);
+            b.transform.position = new Vector3(this.gameObject.transform.position.x, this.transform.position.y + 2, this.gameObject.transform.position.z);
         }
         private void ResetInteractiveItem()
         {

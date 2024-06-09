@@ -6,6 +6,9 @@ namespace Movement
     [AddComponentMenu("Control Script/Mouse Look")]
     public class MouseLook : MonoBehaviour
     {
+        [SerializeField] private Transform playerBody;
+
+
         public enum RotationAxes
         {
             MouseXAndY = 0,
@@ -14,12 +17,16 @@ namespace Movement
         }
         public RotationAxes axes = RotationAxes.MouseXAndY;
 
-        private float sensitivity = 9.0f;
+        private float sensitivity = 1;
 
         public float minimumVert = -45.0f;
         public float maximumVert = 45.0f;
 
         private float _rotationX = 0;
+
+        private Vector2 startPos;
+        private float startRot;
+        private Quaternion originalBodyRot;
 
 
         void Start()
@@ -36,25 +43,27 @@ namespace Movement
 
         void Update()
         {
-            if (axes == RotationAxes.MouseX)
+            if (Input.touchCount == 1)
             {
-                transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
-            }
-            else if (axes == RotationAxes.MouseY)
-            {
-                _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
-                _rotationX = Mathf.Clamp(_rotationX, minimumVert, maximumVert);
+                var touch = Input.GetTouch(0);
 
-                transform.localEulerAngles = new Vector3(_rotationX, transform.localEulerAngles.y, 0);
-            }
-            else
-            {
-                float rotationY = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivity;
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                        startPos = touch.position;
+                        startRot = transform.localEulerAngles.x;
+                        originalBodyRot = playerBody.rotation;
+                        break;
 
-                _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
-                _rotationX = Mathf.Clamp(_rotationX, minimumVert, maximumVert);
+                    case TouchPhase.Moved:
+                        var delta = Vector2.Scale(touch.position - startPos, Vector2.one * sensitivity);
 
-                transform.localEulerAngles = new Vector3(_rotationX, rotationY, 0);
+                        var newRot = Mathf.Clamp(startRot - delta.y, -90, 90);
+                        transform.localEulerAngles = new Vector3(newRot, 0, 0);
+
+                        playerBody.rotation = originalBodyRot * Quaternion.Euler(0, delta.x, 0);
+                        break;
+                }
             }
         }
     }

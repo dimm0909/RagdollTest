@@ -17,8 +17,8 @@ namespace Movement
 
         void Start()
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
             _charController = GetComponent<CharacterController>();
             _anim.SetBool("IsWalking", false);
         }
